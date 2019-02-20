@@ -7,6 +7,7 @@
  * @version 0.0.1
  * @link https://github.com/firekylin/typecho-push-to-firekylin
  */
+require './PasswordHash.php';
 
 class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
   public static function active() {
@@ -55,10 +56,14 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
       return;
     }
 
+    $hash = new PasswordHash();
     $data = array(
       "title" => $contents['title'],
       "pathname" => $class->permalink,
       "markdown_content" => $contents['text'],
+      "status" => 3,
+      "app_key" => $appKey,
+      "auth_key" => $hash->hashPassword($appSecret.$contents['text'])
     );
 
     $ch = curl_init();
