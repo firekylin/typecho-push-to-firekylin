@@ -7,10 +7,10 @@
  * @version 0.0.1
  * @link https://github.com/firekylin/typecho-push-to-firekylin
  */
-require './PasswordHash.php';
+require 'PasswordHash.php';
 
 class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
-  public static function active() {
+  public static function activate() {
     Typecho_Plugin::factory('Widget_Contents_Post_Edit')->finishPublish = array('PushToFirekylin_Plugin', 'push');
   }
   /* 禁用插件方法 */
@@ -56,7 +56,7 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
       return;
     }
 
-    $hash = new PasswordHash();
+    $hash = new PasswordHash(10, false);
     $data = array(
       "title" => $contents['title'],
       "pathname" => $class->permalink,
