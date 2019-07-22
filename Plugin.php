@@ -1,9 +1,9 @@
 <?php
 /**
- * Typecho Push2Firekylin
+ * 将文章推送到 Firekylin 博客
  *
  * @package PushToFireylin
- * @author lizheming
+ * @author 公子
  * @version 0.0.1
  * @link https://github.com/firekylin/typecho-push-to-firekylin
  */
