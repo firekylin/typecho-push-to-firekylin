@@ -59,7 +59,7 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
     $hash = new PasswordHash(10, false);
     $data = array(
       "title" => $contents['title'],
-      "pathname" => $class->permalink,
+      "pathname" => $contents['slug'],
       "markdown_content" => $contents['text'],
       "status" => 3,
       "app_key" => $appKey,
