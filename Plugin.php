@@ -41,7 +41,7 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
     );
   }
 
-  public static function push($contents, $class) {
+  public static function push($contents) {
     $plugin = Typecho_Widget::widget('Widget_Options')->plugin('PushToFirekylin');
     $siteName = $plugin->siteName;
     $siteUrl = $plugin->siteUrl;
