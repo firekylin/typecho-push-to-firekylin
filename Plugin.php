@@ -4,7 +4,7 @@
  *
  * @package PushToFireylin
  * @author 公子
- * @version 0.0.1
+ * @version 0.1.0
  * @link https://github.com/firekylin/typecho-push-to-firekylin
  */
 require 'PasswordHash.php';
@@ -61,7 +61,7 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
     if($contents['visibility'] != 'publish' || $contents['created'] > time()) {
       return;
     }
-    
+
     $hash = new PasswordHash(10, false);
     $data = array(
       "title" => $contents['title'],
