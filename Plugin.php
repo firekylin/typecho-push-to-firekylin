@@ -53,8 +53,8 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
       throw new Typecho_Plugin_Exception(_t('PushToFirekylin 推送配置未完全'));
     }
 
-    $allowPushToFirekylin = $class->request->from('allowPushToFirekylin');
-    if(!$allowPushToFirekylin) {
+    $form = $class->request->from('allowPushToFirekylin');
+    if(!$form['allowPushToFirekylin']) {
       return;
     }
 
