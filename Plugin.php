@@ -12,6 +12,7 @@ require 'PasswordHash.php';
 class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
   public static function activate() {
     Typecho_Plugin::factory('Widget_Contents_Post_Edit')->finishPublish = array('PushToFirekylin_Plugin', 'push');
+		Typecho_Plugin::factory('admin/write-post.php')->bottom = array('PushToFirekylin_Plugin', 'insert');
   }
   /* 禁用插件方法 */
   public static function deactivate(){}
@@ -41,7 +42,7 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
     );
   }
 
-  public static function push($contents) {
+  public static function push($contents, $class) {
     $plugin = Typecho_Widget::widget('Widget_Options')->plugin('PushToFirekylin');
     $siteName = $plugin->siteName;
     $siteUrl = $plugin->siteUrl;
@@ -52,10 +53,15 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
       throw new Typecho_Plugin_Exception(_t('PushToFirekylin 推送配置未完全'));
     }
 
-    if($contents['visibility'] != 'publish' || $contents['created'] > time()) {
+    $allowPushToFirekylin = $class->request->from('allowPushToFirekylin');
+    if(!$allowPushToFirekylin) {
       return;
     }
 
+    if($contents['visibility'] != 'publish' || $contents['created'] > time()) {
+      return;
+    }
+    
     $hash = new PasswordHash(10, false);
     $data = array(
       "title" => $contents['title'],
@@ -76,5 +82,32 @@ class PushToFirekylin_Plugin implements Typecho_Plugin_Interface {
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
     curl_exec($ch);
     curl_close($ch);
+  }
+
+  public static function insert() {
+    $options = Helper::options();
+    $config = $options->plugin('PushToFirekylin');
+    $siteName = $config->siteName;
+    if(!$siteName) {
+      return '';
+    }
+
+    ?>
+    <script>
+    var html = '<section class="typecho-post-option allow-option">'+
+      '<label class="typecho-label">Firekylin 推送</label>'+
+      '<ul>'+
+        '<li>'+
+          '<input id="allowPushToFirekylin" name="allowPushToFirekylin" type="checkbox" value="1">'+
+          '<label for="allowPushToFirekylin"><?php echo $siteName; ?></label>'+
+        '</li>'+
+      '</ul>'+
+    '</section>';
+    var $btn = $('#advance-panel-btn');
+    if($btn.length) {
+      $btn.before(html);
+    }
+    </script>
+    <?php
   }
 }
